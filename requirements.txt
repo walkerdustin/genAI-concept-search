@@ -1,0 +1,13 @@
+black
+ipykernel
+numpy
+panda
+pyarrow
+matplotlib
+plotly
+seaborn
+nbformat
+python-dotenv
+flake8
+termcolor
+langchain
