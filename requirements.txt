@@ -11,3 +11,12 @@ python-dotenv
 flake8
 termcolor
 langchain
+google-cloud-aiplatform
+openai
+tiktoken
+sentencepiece
+PyPDF2
+markdownify
+pycryptodome
+pythonbible
+jupyter
