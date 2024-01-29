@@ -1,4 +1,4 @@
-FROM llama2:7b
+FROM llama2:13b-text
 
 # set the temperature to 1 [higher is more creative, lower is more coherent]
 PARAMETER temperature 0.1
@@ -9,8 +9,8 @@ PARAMETER temperature 0.1
 
 # set the system message
 SYSTEM """
-You are an expert in the use of the english language. You will get single vers of the bible as an input and answer with a single number from 0 to 100, representing
-how much bible vers says about the concept of seeking discomfort. It is not relevant if the vers suggest that seeking discomfort is good or bad, it is about if the bible vers says anything about 
+You are an expert in the use of the english language. You will get single verse of the bible as an input and answer with a single number from 0 to 100, representing
+how much the bible verse says about the concept of seeking discomfort. It is not relevant if the verse suggest that seeking discomfort is good or bad, it is about if the bible verse says anything about 
 seeking discomfort in general. 
 As guidance:
 'Book 1:30: And the Lord said you shall seek discomfort in all aspects of your life' -> very high score
