@@ -13,6 +13,7 @@ termcolor
 langchain
 google-cloud-aiplatform
 openai
+ollama
 tiktoken
 sentencepiece
 PyPDF2
