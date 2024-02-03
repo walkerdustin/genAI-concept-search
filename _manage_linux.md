@@ -1,6 +1,7 @@
 # Manage Ubuntu Linux
 
 ## Setup
+
 ```bash
 sudo apt update && sudo apt upgrade
 ```
@@ -20,4 +21,7 @@ python -m pip install --upgrade pip
 ```
 
 ## ollama
+
+```bash
 curl https://ollama.ai/install.sh | sh
+```
