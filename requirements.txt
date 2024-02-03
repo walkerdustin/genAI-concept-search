@@ -21,3 +21,4 @@ markdownify
 pycryptodome
 pythonbible
 jupyter
+mistralai
