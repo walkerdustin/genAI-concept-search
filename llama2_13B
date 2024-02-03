@@ -1,4 +1,4 @@
-FROM mistral:latest
+FROM llama2:13b
 
 # set the temperature to 0 [higher is more creative, lower is more coherent]
 # I do not want any creativity
