@@ -21,16 +21,18 @@ However, the main purpose of this repository is to experiment with Large Languag
   - [General Findings](#general-findings)
     - [Performance (Speed)](#performance-speed)
     - [Prompt Engineering](#prompt-engineering)
+      - [scoring to 100 does not work](#scoring-to-100-does-not-work)
     - [Authentication](#authentication)
       - [Google Cloud](#google-cloud)
       - [OpenAI](#openai)
   - [Lessons learned](#lessons-learned)
     - [Safety](#safety)
     - [Rate Limiting](#rate-limiting)
-    - [scoring to 100 does not work](#scoring-to-100-does-not-work)
 
 ## Comparison of the models
-Tested LLMS
+
+Tested LLMS:
+
 - Google VertexAi:
   - PaLM 2
   - GeminiPro
@@ -51,12 +53,13 @@ Here is a comparison of the costs for the tested LLMS models:
 ![Cost Comparison](images/costs.png)
 
 ### Speed
-The mistral.ai api gave the fastest answers.
-The local Llama 7B took the longest
+
+The mistral.ai API gave the fastest answers.
+The local Llama 13B took the longest.
 
 ### Performance
 
-Below is a table of the top ratings sorted by mistral medium, because based on the public stats, it should be the most powerful model.  Based on this view, it looks like, that llama7B is the closest match to mistral medium, but this is not true, as llama7B gives a rating of 8,7 or 6 to every verse.  Another thing, that is interesting, is that the ratings of mistral tiny and Ollama mistral7B are different, even though they should be the same underlying model.
+Below is a table of the top ratings sorted by mistral medium, because based on the public stats, it should be the most powerful model.  Based on this view, it looks like, that llama7B is the closest match to mistral medium, but this is not true, as llama7B gives a rating of 8,7 or 6 to every verse.  Another thing, that is interesting, is that the ratings of mistral-tiny and Ollama mistral7B are different, even though they should be the same underlying model.
 
 | id |   mistral medium |   mistral small |   mistral tiny |   ollama llama13B |   ollama llama7B |   ollama mistral7B |   gpt 3.5 |   gemini pro |   text bison |
 |-----:|-------------------------:|------------------------:|-----------------------:|--------------------------:|-------------------------:|---------------------------:|------------------:|---------------------:|---------------------:|
@@ -89,30 +92,29 @@ In the table where there is a -1 or less, the model failed to output a number wi
 
 ### Performance (Speed)
 
-Here are a few things I have done to improve the speed
-limit the output token
-Zero shot reasoning
-Use system message to have the model precompute some of the attention matrix
+Here are a few things I have done to improve the speed and reduce cost:
+__limit the output token__ to just 2 and tell the LLM to only output. This results in a __zero-shot reasoning__ task.
+Use a __system message__ to give the instructions to the LLM.
+The theory behind that is that the LLM can precompute part of the Attention matrix because the system message does not change. This only works, if the LLM is set up to cache the pre-computed attention matrix
 
 ### Prompt Engineering
 
 I use the following system prompt:
 > """You are an expert in the understanding and interpretation of the English language. You will get a single verse of the bible as an input and respond only with a single number from 0 to 10, representing
 how much the given bible verse says about the concept of seeking discomfort. It is irrelevant if the verse suggests that seeking discomfort is good or bad.
-For every prompt you will answer with just one number (0 to 10). 0 represents the lowest correlation to the concept of seeking comfort or 
+For every prompt you will answer with just one number (0 to 10). 0 represents the lowest correlation to the concept of seeking comfort or
 seeking discomfort and 10 represents the highest correlation to the concept of seeking comfort or seeking discomfort.
 Only answer with a single number. Do NOT give any explanation or context.
 """
 
 I prime the model with "You are an expert in the use of the English language" to make sure, it focuses just on the interpretation of verse and not on its prior knowledge of the bible or Christianity.  
-I give it a few examples without giving out exact numbers, to hopefully improve the performance.
 
-> (Note: This verse from the Bible, specifically Matthew 5:11 in the New Testament, is known as the "Beatitudes" or "Blessed Are..." sayings of Jesus. It speaks about being blessed when one is persecuted for following God's teachings. While it doesn't explicitly mention seeking discomfort, it does suggest that enduring hardships and adversity can bring blessings.)
+#### scoring to 100 does not work
 
---> prompt engineering is hard
-
-> I understand the instructions. However, as a text-based AI, I don't have the ability to directly access or read Bible verses. I can only process text given to me. Therefore, I cannot provide a number based on a specific Bible verse without being provided with that verse first. If you give me a Bible verse, I will give you a number representing how much it talks about seeking discomfort (0-10). Otherwise, I cannot answer."
---> sometimes i get some random wierdness
+None of the tested models ever scored a score other than a multiple of 10.
+I expected the model to first predict the first digit and then finetune its answer with the second token.
+This may be because all multiples of 10 consist of just one token.  
+In fact, with OpenAIs Tokenizer, all numbers from 0 to 999 have their own token. This may mean, that it makes more sense to just score from 0 to 10.
 
 ### Authentication
 
@@ -163,10 +165,3 @@ I could request to up the limit
 in the meantime, the limit was lifted
 
 on the Gemini Pro requests, I randomly get some annoying grpc error.
-
-### scoring to 100 does not work
-
-none of the tested models ever scored a score other than a multiple of 10.
-I expected the model to first predict the first digit and then finetune its answer with the second token.
-This may be because all multiples of 10 consist of just one token.  
-In fact, with OpenAIs Tokenizer, all numbers from 0 to 999 have their own token. This may mean, that it makes more sense to just score from 0 to 10.
