@@ -1,7 +1,7 @@
 # Concept search powered by Large Language Models
 
 In this repository, I explore the Idea of a concept search with Large Language Models.  
-Instead of an exact word match or an intelligent full-text search, I search the text for representing a concept or Idea. 
+Instead of an exact word match or an intelligent full-text search, I search the text for representing a concept or Idea.
 
 In this experiment, the Bible is searched for the concept of __seeking discomfort__.  
 For this, I go through every verse and let a large Language Model rate how much this verse represents the concept of seeking discomfort.

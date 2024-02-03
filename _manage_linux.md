@@ -1,5 +1,7 @@
 # Manage Ubuntu Linux
 
+This is a guide to setting up an environemt in wsl for running Ollama locally on windows.
+
 ## Setup
 
 ```bash
