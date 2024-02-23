@@ -28,6 +28,8 @@ However, the main purpose of this repository is to experiment with Large Languag
   - [Lessons learned](#lessons-learned)
     - [Safety](#safety)
     - [Rate Limiting](#rate-limiting)
+    - [Bigger is not always better](#bigger-is-not-always-better)
+    - [APIs for bigger models are faster](#apis-for-bigger-models-are-faster)
 
 ## Comparison of the models
 
@@ -37,7 +39,8 @@ Tested LLMS:
   - PaLM 2
   - GeminiPro
 - OpenAi
-  - GPT3.5
+  - GPT 3.5
+  - GPT 4
 - mistral.ai
   - mistral-tiny (mistral 7B)
   - mistral-small (mixtral 8x7B)
@@ -54,8 +57,10 @@ Here is a comparison of the costs for the tested LLMS models:
 
 ### Speed
 
-The mistral.ai API gave the fastest answers.
-The local Llama 13B took the longest.
+The Google Cloud API gave the fastest answers.  
+For the local models run with Ollama, Llama 13B took the longest. The reason for this nonlinear time increase is that the 13B parameter model is too big to fit into the 8 GB VRAM on my GTX 1070. Therefore some of the Inference is delegated to RAM and CPU, which is much slower. The Mistral tiny result looks like an outlier compared to the other APIs Mistral.ai offers. Subsequent tests show, that the Mistral tiny API is usually much faster.
+
+![barplot comparing the runtime](./images/times.png)
 
 ### Performance
 
@@ -88,6 +93,8 @@ Below is a table of the top ratings sorted by mistral medium, because based on t
 
 In the table where there is a -1 or less, the model failed to output a number with its first 2 tokens.
 
+![barplot of errors](images/errors.png)
+
 ## General Findings
 
 ### Performance (Speed)
@@ -114,7 +121,7 @@ I prime the model with "You are an expert in the use of the English language" to
 None of the tested models ever scored a score other than a multiple of 10.
 I expected the model to first predict the first digit and then finetune its answer with the second token.
 This may be because all multiples of 10 consist of just one token.  
-In fact, with OpenAIs Tokenizer, all numbers from 0 to 999 have their own token. This may mean, that it makes more sense to just score from 0 to 10.
+In fact, with OpenAIs Tokenizer, all numbers from 0 to 999 consist of only one token. This may mean, that it makes more sense to just score from 0 to 10.
 
 ### Authentication
 
@@ -128,7 +135,7 @@ select KEYS
 Create New Key
 Then the credentials.json file is downloaded  
 Save it somewhere  
-Then put the path to that file into the environment Variable
+Then put the path to that file into the Environment Variable
 
 ```python
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'C:/Git_Repos/try-out-vertex-ai-20aaf5516b7c.json' 
@@ -165,3 +172,14 @@ I could request to up the limit
 in the meantime, the limit was lifted
 
 on the Gemini Pro requests, I randomly get some annoying grpc error.
+
+### Bigger is not always better
+
+Llama 7B was better at using my pre-defined response template of only responding with the number.  
+Llma 13B however, tried to answer in a full sentence ignoring my request.
+
+### APIs for bigger models are faster
+
+The runtime comparison graph shows that for all the APIs tested the bigger models are faster.  
+Gemini Pro is faster than Palm2, GPT 4 is faster than GPT 3.5 and Mistral medium is faster than Mistral small. This is counterintuitive because, on the same Hardware, bigger models should take longer to compute.  
+This shows, that companies may put more powerful graphic cards and more compute behind their bigger models.
